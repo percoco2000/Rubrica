@@ -253,7 +253,7 @@ static Rubrica_T Inizializza_Rubrica (void)
                      exit (1);
 		             }
 		           }
-		      temp.n_nominativi=num_letti;     
+		     temp.n_nominativi=num_letti;     
 	         fclose(file);
              }else
                  {
@@ -414,21 +414,21 @@ static void Aggiungi_Nome(Rubrica_T *rubrica)
 		nominativo.note=malloc(MAX_NOTE_CHAR);
 		strcpy(nominativo.note,temp3);
         
+        Inserisci_Record(rubrica,nominativo);
+        
+        free (nominativo.nome);
+        free (nominativo.numero);
+        free (nominativo.note);
+	       
 	    } else 
 	         {
-			  printf ("\n\n\n       Impossibile aggiungere\n\n");
-			  printf ("      Massimo numero di nominativi raggiunto ");
+			  printf ("\n\n\n    Impossibile aggiungere il record\n");
+			  printf ("   Massimo numero di nominativi raggiunto\n\n");
+		      printf (" Premi ENTER");
+		      WAIT_ENTER();
 		      }
 		      		   
-	     
-      //WAIT_ENTER();
-      Inserisci_Record(rubrica,nominativo);
-      
-      
-      free (nominativo.nome);
-      free (nominativo.numero);
-      free (nominativo.note);
-      
+	          
       }
 
 
