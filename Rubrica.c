@@ -280,7 +280,12 @@ static void Write_File (Rubrica_T *rubrica)
 	  	 int i;
 	  	 
 	  	 file=fopen(RUBRICA,"w");
-         if (file==NULL) printf("Errore nel Creare il file ... Sorry");
+         
+         if (file==NULL) 
+          {
+		   printf("Errore nel Creare il file ... Sorry");
+           exit(1);
+	       }
          
          // Writes file header
          fputs("-----Database per il programma Rubrica-----\n",file);
@@ -323,7 +328,7 @@ static void Cerca_Nome(Rubrica_T *rubrica)
 	  printf ("Immetti un nome vuoto per annullare\n\n");
       printf ("Nome da cercare ? ");
       
-      Input_String(chiave,40);
+      Input_String(chiave,MAX_NAME_CHAR-1);
       
       // Annullare?
 	  if (chiave[0]=='\0') return;
@@ -388,18 +393,18 @@ static void Aggiungi_Nome(Rubrica_T *rubrica)
 		   printf ("----------------------------------------\n");
 		   printf ("Immetti un nome vuoto per annullare\n\n");
 		
-		   printf ("Nome da aggiungere : ");
+		   printf ("Nome da aggiungere (Max %d caratteri) : ",MAX_NAME_CHAR-1);
 		   Input_String(temp1,MAX_NAME_CHAR-1);
 		
 		   // Annullare?
 		   if (temp1[0]=='\0') return;
 		
 		   
-		   printf ("Numero telefonico  : ");
+		   printf ("Numero di telefono (Max %d caratteri) : ",MAX_PHON_CHAR-1);
 		   Input_String(temp2,MAX_PHON_CHAR-1);
 		   
 		
-		   printf ("Note varie         : ");
+		   printf ("Note varie (Max %d caratteri) : ",MAX_NOTE_CHAR-1);
 		   Input_String(temp3,MAX_NOTE_CHAR-1);
 		   
            printf("\n\nE' corretto (y/n) ? ");  
@@ -683,12 +688,14 @@ static void Cancella_Nome(Rubrica_T *rubrica)
       {
        int i;
        CLEAR();
-       printf ("Record Trovati %d\n\n",rubrica->n_nominativi);
+       printf ("Record Trovati : %d\n\n",rubrica->n_nominativi);
        for (i=0;i<rubrica->n_nominativi;i++)
          {
-	      printf ("       ----------------> Record %d <----------------\n",i+1);
-          printf ("Nome  :%-30s -> Num: %s\n",rubrica->nominativi[i].nome,rubrica->nominativi[i].numero);
-	      printf ("Note  :%s\n\n",rubrica->nominativi[i].note);
+	      printf ("Record %2d  ------------------------------------------\n",i+1);
+	      //printf ("       ----------------> Record %d <----------------\n",i+1);
+          printf ("   %-30s -> Num: %s\n",rubrica->nominativi[i].nome,rubrica->nominativi[i].numero);
+	      //printf ("Note  :%s\n\n",rubrica->nominativi[i].note);
+	      printf ("   %s\n\n",rubrica->nominativi[i].note);
           if (!((i+1)%5))
            {
             printf ("ENTER -> Prossimi nomi");
@@ -875,9 +882,8 @@ static void Inserisci_Record (Rubrica_T *rubrica, Elemento_T elemento)
  * -----------------------------------------------
  * This function ask the user for a string, and store
  * it in line[]. The '\n' character is discarged and a '\0'
- * is added to cbrica(orrectly terminate the string. If the user 
- * enters more than n character, the function signals the 
- * error and abort the program.
+ * is added to cbrica(orrectly terminate the string. 
+ * The function ignore any character above 'n'. 
  */
 static void Input_String (char line[],int n)  
      {
@@ -886,15 +892,13 @@ static void Input_String (char line[],int n)
 	  
 	  while (ch!='\n')
 	      {
-		   i++;
-		   if(i>=n) 
-		    {
-			 printf("Error in function input_string: Too many characters");
-			 exit(1);
-		     }
 		   ch=getchar();
-		   line[i]=ch;
-	       }
+		   if(i<n) 
+		    {
+			 i++;
+			 line[i]=ch;
+			 }
+		   }
 	  line[i]='\0';
       }     
 
